@@ -1,30 +1,22 @@
 import React, { Component } from "react";
 import { Button, StyleSheet, Text, TextInput, View, Image } from "react-native";
 import User from "../interfaces/User.interface";
+import Pokemon from "../interfaces/Pokemon.interface";
 
 interface SearchState {
   error: boolean;
-  pokemon: Pokemon;
-  text: String;
-}
-
-interface Pokemon {
-  name: string;
-  numberOfAbilites: number;
-  baseExperience: number;
-  imageUrl: string;
+  pokemon: Pokemon | null;
+  text: string;
 }
 
 export class PokemonSearch extends Component<User, SearchState> {
-  constructor(props: User) {
-    super(props);
-    this.state = {
-      error: false,
-      pokemon: null,
-      text: "",
-    };
-  }
-  _onPressButton = (): void => {
+  state = {
+    error: false,
+    pokemon: null,
+    text: "",
+  };
+
+  private onPressButton = (): void => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${this.state.text}`).then(res => {
       if (res.status !== 200) {
         this.setState({ error: true });
@@ -43,6 +35,11 @@ export class PokemonSearch extends Component<User, SearchState> {
       });
     });
   };
+
+  private handleChangeText = (text: string): void => {
+    this.setState({ text });
+  };
+
   render() {
     const { name: userName } = this.props;
     const { error, pokemon } = this.state;
@@ -51,18 +48,16 @@ export class PokemonSearch extends Component<User, SearchState> {
 
     if (error) {
       resultMarkup = (
-        <Text style={{ fontSize: 20 }}>
-          Pokemon not found, please try again
-        </Text>
+        <Text style={styles.allText}>Pokemon not found, please try again</Text>
       );
     } else if (this.state.pokemon) {
       resultMarkup = (
         <View style={{ alignItems: "center" }}>
           <Image
-            style={{ width: 200, height: 200 }}
+            style={styles.pokemonImage}
             source={{ uri: pokemon.imageUrl }}
           />
-          <Text style={{ fontSize: 20 }}>
+          <Text style={styles.allText}>
             has {pokemon.numberOfAbilites} abilities and{" "}
             {pokemon.baseExperience} base experience points
           </Text>
@@ -73,20 +68,21 @@ export class PokemonSearch extends Component<User, SearchState> {
     return (
       <View>
         <View>
-          <Text style={{ fontSize: 20 }}>
+          <Text style={styles.allText}>
             {userName} search pokemon by number
           </Text>
         </View>
         <View style={styles.searchInput}>
           <TextInput
-            style={{ fontSize: 16 }}
             placeholder="Type here number of pokemon!"
-            onChangeText={text => this.setState({ text })}
+            onChangeText={text => {
+              this.handleChangeText(text);
+            }}
           />
         </View>
 
         <View style={styles.searchButton}>
-          <Button onPress={this._onPressButton} title="Search" />
+          <Button onPress={this.onPressButton} color="#841584" title="Search" />
         </View>
         {resultMarkup}
       </View>
@@ -101,13 +97,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   searchButton: {
-    height: 50,
+    backgroundColor: "red",
+    borderWidth: 1,
   },
   searchInput: {
     height: 50,
     borderWidth: 1,
     borderColor: "black",
     marginBottom: 10,
+  },
+  allText: {
+    fontSize: 20,
+  },
+  pokemonImage: {
+    width: 100,
+    height: 100,
   },
 });
 

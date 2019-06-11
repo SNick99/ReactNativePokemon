@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "declaration": true,
     "noUnusedLocals": true,
-    "strictNullChecks": false
+    "strictNullChecks": false,
+    "noImplicitAny": false
   },
   "exclude": ["node_modules"]
 }

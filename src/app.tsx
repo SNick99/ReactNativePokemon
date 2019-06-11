@@ -1,10 +1,8 @@
 import * as React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import PokemonSearch from "./components/PokemonSearch";
-export interface Props {}
-export interface State {}
 
-export class App extends React.Component<Props, State> {
+export class App extends React.Component<{}> {
   render() {
     return (
       <View style={styles.container}>
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   header: {
-    height: "10%",
+    flex: 0.1,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "black",
@@ -36,8 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
   },
   body: {
-    height: "90%",
-    paddingLeft: 10,
-    paddingRight: 10,
+    flex: 0.9,
+    paddingHorizontal: 10,
   },
 });
